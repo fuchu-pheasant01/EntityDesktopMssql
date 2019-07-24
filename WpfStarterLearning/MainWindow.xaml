@@ -1,0 +1,37 @@
+﻿<Window x:Name="MainWindow1" x:Class="MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfStarterLearning"
+        mc:Ignorable="d"
+        Title="テストWpfウィンドウ" Height="600" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Menu HorizontalAlignment="Left" Height="22" Margin="10,10,0,0" VerticalAlignment="Top" Width="772" Grid.ColumnSpan="4">
+            <MenuItem Header="ファイル(_F)">
+                <MenuItem Header="終了(_X)" />
+            </MenuItem>
+            <MenuItem Header="編集(_E)" />
+        </Menu>
+        <DataGrid x:Name="DataGrid1" HorizontalAlignment="Left" Height="200" Margin="10,40,0,0" VerticalAlignment="Top" Width="772" Grid.ColumnSpan="4"/>
+        <RichTextBox x:Name="RichTextBox1" HorizontalAlignment="Left" Height="118" Margin="10,250,0,0" VerticalAlignment="Top" Width="376" Grid.ColumnSpan="2">
+            <FlowDocument>
+                <Paragraph>
+                    <Run Text="RichTextBox"/>
+                </Paragraph>
+            </FlowDocument>
+        </RichTextBox>
+        <Button x:Name="ButtonDbRead" Content="DB読み出しテスト" HorizontalAlignment="Left" Margin="10,62,0,0" VerticalAlignment="Top" Width="178" Height="80" Grid.Row="1"/>
+        <Button x:Name="ButtonTimer" Content="タイマーテスト" HorizontalAlignment="Left" Margin="10,62,0,0" VerticalAlignment="Top" Width="178" Height="80" RenderTransformOrigin="0.536,0.512" Grid.Column="1" Grid.Row="1"/>
+    </Grid>
+</Window>
