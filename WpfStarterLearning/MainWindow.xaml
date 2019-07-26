@@ -23,7 +23,7 @@
             </MenuItem>
             <MenuItem Header="編集(_E)" />
         </Menu>
-        <DataGrid x:Name="DataGrid1" HorizontalAlignment="Left" Height="200" Margin="10,40,0,0" VerticalAlignment="Top" Width="772" Grid.ColumnSpan="4"/>
+        <DataGrid x:Name="DataGrid1" ItemsSource="{Binding}" AutoGenerateColumns="True" HorizontalAlignment="Left" Height="200" Margin="10,40,0,0" VerticalAlignment="Top" Width="772" Grid.ColumnSpan="4"/>
         <RichTextBox x:Name="RichTextBox1" HorizontalAlignment="Left" Height="118" Margin="10,250,0,0" VerticalAlignment="Top" Width="376" Grid.ColumnSpan="2">
             <FlowDocument>
                 <Paragraph>
@@ -33,5 +33,7 @@
         </RichTextBox>
         <Button x:Name="ButtonDbRead" Content="DB読み出しテスト" HorizontalAlignment="Left" Margin="10,62,0,0" VerticalAlignment="Top" Width="178" Height="80" Grid.Row="1"/>
         <Button x:Name="ButtonTimer" Content="タイマーテスト" HorizontalAlignment="Left" Margin="10,62,0,0" VerticalAlignment="Top" Width="178" Height="80" RenderTransformOrigin="0.536,0.512" Grid.Column="1" Grid.Row="1"/>
+        <Button x:Name="ButtonXmlRead" Content="Xml読み出しテスト" Grid.Column="2" HorizontalAlignment="Left" Margin="10,17,0,0" Grid.Row="1" VerticalAlignment="Top" Width="178" Height="65"/>
+        <Button x:Name="ButtonXmlWrite" Content="Xml書き込みテスト" Grid.Column="2" HorizontalAlignment="Left" Margin="10,115,0,0" Grid.Row="1" VerticalAlignment="Top" Width="178" Height="65"/>
     </Grid>
 </Window>

@@ -43,4 +43,25 @@ Class MainWindow
         subw.ShowDialog()
 
     End Sub
+
+    Private bind As System.Windows.Data.Binding
+    Private Dset As Data.DataSet
+    Private Sub ButtonXmlRead_Click(sender As Object, e As RoutedEventArgs) Handles ButtonXmlRead.Click
+
+        bind = New System.Windows.Data.Binding()
+        'DataGrid1.ItemsSource = bind1
+        Dset = New System.Data.DataSet()
+
+        Dset.ReadXml("C:\Tem\MsSqlServer.xml", Data.XmlReadMode.ReadSchema)
+        DataGrid1.ItemsSource = Dset.Tables(0).DefaultView
+        'bind.Source = dataset1.Tables(0).DefaultView
+
+    End Sub
+
+    Private Sub ButtonXmlWrite_Click(sender As Object, e As RoutedEventArgs) Handles ButtonXmlWrite.Click
+
+        Dset.WriteXml("C:\Tem\MsSqlServer.xml", Data.XmlWriteMode.WriteSchema)
+        Dset.AcceptChanges()
+
+    End Sub
 End Class
