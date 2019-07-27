@@ -1,9 +1,11 @@
 ﻿Imports System.Security.Permissions
 Imports System.Windows.Threading
 Public Class WindowTimer
-    Private DispaTmr As New System.Windows.Threading.DispatcherTimer()
-    Private DispaTmrCnt As Integer
-    Private TimersTmr As New System.Timers.Timer()
+    Private WithEvents DispaTmr As New System.Windows.Threading.DispatcherTimer()
+
+    Private WithEvents TimersTmr As New System.Timers.Timer()
+    Private ThreadingTmr As Threading.Timer
+    Private TimerCnt As Integer
     Private DoEventsType As Boolean = True
     Private Sub WindowTimer1_Loaded(sender As Object, e As RoutedEventArgs) Handles WindowTimer1.Loaded
 
@@ -21,13 +23,14 @@ Public Class WindowTimer
     Private Sub ButtonDispaTimer_Click(sender As Object, e As RoutedEventArgs) Handles ButtonDispaTimer.Click
 
         'DispatcherTimerセットアップ
-        AddHandler DispaTmr.Tick, New EventHandler(AddressOf dispatcherTimer_Tick)
-        DispaTmr.Interval = New TimeSpan(0, 0, 0, 0, 5)
+        AddHandler DispaTmr.Tick, New EventHandler(AddressOf DispatcherTimer_Tick)
+        DispaTmr.Interval = New TimeSpan(0, 0, 0, 1, 0)
+        TimerCnt = 0
         DispaTmr.Start()
 
     End Sub
 
-    Private Sub dispatcherTimer_Tick(sender As Object, e As EventArgs) ' Handles dispatcherTimer.Tick
+    Private Sub DispatcherTimer_Tick(sender As Object, e As EventArgs) Handles DispaTmr.Tick
 
         'DispatcherTimerのイベントハンドラー内はUIスレッドで動作するので時間のかかる処理を行うとその間は他のイベントハンドラーは受け付けない。
 
@@ -36,9 +39,10 @@ Public Class WindowTimer
         'InvalidateRequerySuggestedを強制的に使用します。
         'CanExecuteChangedイベントを発生させるCommand。
 
+        TimerCnt += 1
         '現在の秒を表示するラベルを更新する
-        LabelTime.Content = Format(DateTime.Now, "HH:mm:ss")
-        'timec += 1
+        LabelTime.Content = "現在時刻 ：" & Format(DateTime.Now, "HH:mm:ss")
+        LabelCount.Content = "秒カウント：" & TimerCnt
         'LabelTime.Content = timec
 
         'CommandManagerにRequerySuggestedイベントを発生させる
@@ -56,20 +60,23 @@ Public Class WindowTimer
 
         AddHandler TimersTmr.Elapsed, New Timers.ElapsedEventHandler(AddressOf TimersTimer_Tick)
         'TimersTmr.SynchronizingObject = Me.LabelTime
-        TimersTmr.Interval = 500
+        TimersTmr.Interval = 1000
         'TimersTmr.AutoReset = True
         'TimersTmr.Enabled = True
+        TimerCnt = 0
         TimersTmr.Start()
 
     End Sub
 
-    Private Sub TimersTimer_Tick(sender As Object, e As Timers.ElapsedEventArgs) 'As Handles TimersTimer.Tick
+    Private Sub TimersTimer_Tick(sender As Object, e As Timers.ElapsedEventArgs) Handles TimersTmr.Elapsed
 
         'Timers.Timerのイベントハンドラーは別スレッドで実行されるので直接UIスレッドのコントロールにアクセスできない。(スレッドプールで実行される)
         'Invoke、BeginInvoke、EndInvoke
         Application.Current.Dispatcher.Invoke(
         Sub()
-            LabelTime.Content = Format(DateTime.Now, "HH:mm:ss")
+            TimerCnt += 1
+            LabelTime.Content = "現在時刻 ：" & Format(DateTime.Now, "HH:mm:ss")
+            LabelCount.Content = "秒カウント：" & TimerCnt
         End Sub)
 
     End Sub
@@ -77,6 +84,36 @@ Public Class WindowTimer
     Private Sub ButtonTimersStop_Click(sender As Object, e As RoutedEventArgs) Handles ButtonTimersStop.Click
 
         TimersTmr.Stop()
+
+    End Sub
+
+    Private Sub ButtonThreadingTimer_Click(sender As Object, e As RoutedEventArgs) Handles ButtonThreadingTimer.Click
+
+        'Threading.Timerのイベントハンドラーは別スレッドで実行されるので直接UIスレッドのコントロールにアクセスできない。(スレッドプールで実行される)
+        'Dim ThreadingCallback As New System.Threading.TimerCallback(AddressOf ThreadingTimer)
+        Dim ThreadingCallback As System.Threading.TimerCallback = Sub(state)
+                                                                      Dim o As Object
+                                                                      ThreadingTimer(o)
+                                                                  End Sub
+        TimerCnt = 0
+        ThreadingTmr = New Threading.Timer(ThreadingCallback, Nothing, 0, 1000)
+
+    End Sub
+
+    Private Sub ButtonThreadingStop_Click(sender As Object, e As RoutedEventArgs) Handles ButtonThreadingStop.Click
+
+        ThreadingTmr.Change(Threading.Timeout.Infinite, Threading.Timeout.Infinite)
+
+    End Sub
+
+    Private Sub ThreadingTimer(sender As Object)
+
+        Application.Current.Dispatcher.Invoke(
+        Sub()
+            TimerCnt += 1
+            LabelTime.Content = "現在時刻 ：" & Format(DateTime.Now, "HH:mm:ss")
+            LabelCount.Content = "秒カウント：" & TimerCnt
+        End Sub)
 
     End Sub
 
